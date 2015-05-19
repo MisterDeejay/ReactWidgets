@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather Clock</title>
+    <style>ul {list-style-type: none}</style>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+  <body>
+
+    <script type="text/jsx">
+    var Weather = React.createClass({
+      getInitialState: function() {
+        return {loc: "", currentTemp: "", desc: ""};
+      },
+      parseResponse: function(resp) {
+        var fahrenheitTemp = (resp.main.temp - 273.15) * 1.8 + 32;
+        this.setState({ loc: resp.name,
+                        currentTemp: Math.round(fahrenheitTemp),
+                        desc: resp.weather[0].description });
+      },
+      componentDidMount: function() {
+        navigator.geolocation.getCurrentPosition(function(position){
+          var lat = position.coords.latitude;
+          var lon = position.coords.longitude;
+          var weatherURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon;
+          this.queryAPI(weatherURL);
+        }.bind(this));
+      },
+      queryAPI: function(weatherURL) {
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+               if(xmlhttp.status == 200){
+                 var resp = JSON.parse(xmlhttp.responseText);
+                 this.parseResponse(resp);
+               }
+               else if(xmlhttp.status == 400) {
+                  console.log('There was an error 400')
+               }
+               else {
+                   console.log('something else other than 200 was returned')
+               }
+            }
+        }.bind(this);
+        xmlhttp.open("GET", weatherURL, true);
+        xmlhttp.send();
+      },
+      render: function() {
+        return (
+          <div id="weatherinfo">
+            <h3>Weather for {this.state.loc}</h3>
+            <ul>
+              <li>Current temperature: {this.state.currentTemp} &#8457;</li>
+              <li>Condition: {this.state.desc}</li>
+            </ul>
+          </div>
+        )
+      }
+    });
+
+    var Clock = React.createClass({
+      getInitialState: function(){
+        return {date: new Date()};
+      },
+      _tick: function(){
+        this.setState({date: new Date()});
+      },
+      componentDidMount: function() {
+        this.interval = setInterval(this._tick, 1000)
+      },
+      componentWillUnmount: function() {
+        clearInterval(this.interval);
+      },
+      printSeconds: function() {
+        if(this.state.date.getSeconds() < 10) {
+          return "0" + this.state.date.getSeconds().toString();
+        } else {
+          return this.state.date.getSeconds().toString();
+        }
+      },
+      printMinutes: function() {
+        if(this.state.date.getMinutes() < 10) {
+          return "0" + this.state.date.getMinutes().toString();
+        } else {
+          return this.state.date.getMinutes().toString();
+        }
+      },
+      render: function() {
+        return (
+        <div>
+          The current time is
+          <span id="hour"> {this.state.date.getHours().toString() + ":"}</span>
+          <span id="min">{this.printMinutes() + ":"}</span>
+          <span id="sec">{this.printSeconds()}</span>
+        </div>
+      )
+      }
+    });
+
+    React.render(<div><Clock/><Weather/></div>, document.body);
+    </script>
+  </body>
+</html>

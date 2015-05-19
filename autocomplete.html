@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Autocomplete</title>
+    <style>ul {list-style-type: none}</style>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+  <body>
+    <script type="text/jsx">
+      var Autocomplete = React.createClass({
+        getInitialState: function(names) {
+          return {query: ""};
+        },
+        handleChange: function(event) {
+          this.setState({query:event.target.value});
+        },
+        render: function(){
+          var allNames = this.props.allNames,
+            searchStr = this.state.query.trim().toLowerCase();
+
+          if(searchStr.length > 0) {
+            allNames = allNames.filter(function(name) {
+              return name.toLowerCase().match(searchStr);
+            });
+          }
+          return (
+            <div>
+              <form>
+                <input type="text" onChange={this.handleChange}></input>
+              </form>
+              <ul>
+                {allNames.map(function(name){
+                    return <li>{name}</li>
+                })
+                }
+              </ul>
+            </div>
+          )
+        }
+      });
+      var testNames = ['Antonio Connery','Angelyn Enriquez','Jude Skow',
+      'Maye Lebowitz','Elida Lal','Emelda Rodrick','Yan Benz','Allan Kucera',
+      'Adriene Peppers','Elease Soliman','Margarette Arney','Mauricio Pechacek',
+      'Tisha Legg','Edmond Hufnagel','Felica Kerschner','Oscar Teachout',
+      'Sharyl Goodyear','Latrina Vannoy','Mindy Bellin','Chi Trivette']
+      React.render(<Autocomplete allNames={testNames} />, document.body);
+    </script>
+  </body>
+</html>
