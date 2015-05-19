@@ -30,9 +30,10 @@
                 <input type="text" onChange={this.handleChange}></input>
               </form>
               <ul>
-                {allNames.map(function(name){
+                {
+                  allNames.map(function(name){
                     return <li>{name}</li>
-                })
+                  })
                 }
               </ul>
             </div>

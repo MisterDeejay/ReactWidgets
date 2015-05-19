@@ -1,0 +1,9 @@
+.content {
+  display: block;
+}
+
+.header {
+  float: left;
+  cursor: pointer;
+  border: 1px solid blue;
+}

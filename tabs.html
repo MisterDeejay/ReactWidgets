@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tabs</title>
+    <link rel="stylesheet" href="tabs.css">
+    <style>ul {list-style-type: none}</style>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+  <body>
+    <script type="text/jsx">
+    var Header = React.createClass({
+      getInitialState: function() {
+        return {selected: 0};
+      },
+      handleClick: function(idx) {
+        this.setState({selected: idx});
+      },
+      render: function() {
+        var self = this;
+
+        return (
+          <div>
+            <div className="all-headers">
+              {this.props.stuff.map(function(tab, idx){
+                  return (
+                    <div className="header" key={idx} onClick={self.handleClick.bind(self, idx)}>{tab.title}</div>
+                  )
+              })
+              }
+              <br />
+            </div>
+            <Tab stuff={this.props.stuff[this.state.selected]} />
+          </div>
+        );
+      }
+    });
+
+    var Tab = React.createClass({
+
+      render: function() {
+        return (
+          <div className="content">
+            <h2>{this.props.stuff.title}</h2>
+            <p>{this.props.stuff.content}</p>
+          </div>
+        )
+      }
+    });
+    var tabInfo = [{title:"Bacon ipsum",content:"Bacon ipsum dolor amet short loin kevin pork loin sausage, short ribs porchetta pork leberkas brisket salami. Hamburger prosciutto ham hock rump boudin doner fatback."},
+                   {title:"Mud catfish", content: "Mud catfish South American Lungfish red snapper; sleeper shark nase tidewater goby Asiatic glassfish ponyfish sand stargazer. Ronquil Bigscale pomfret shortnose greeneye warmouth sardine; yellowbelly tail catfish red velvetfish; bamboo shark Japanese eel."},
+                   {title:"	Intrigued by the shower plan", content: "Chase mice chew on cable and meowwww. Inspect anything brought into the house mark territory. Poop on grasses scratch leg; meow for can opener to feed me for spot something, big eyes, big eyes, crouch, shake butt, prepare to pounce so chase red laser dot but chew on cable. Sleep nap caticus cuteicus. Chase ball of string chase ball of string caticus cuteicus ignore the squirrels, you'll never catch them anyway see owner, run in terror. Rub face on owner eat a plant, kill a hand spread kitty litter all over house. Shove bum in owner's face like camera lens fall over dead (not really but gets sypathy) so who's the baby."}
+                   ];
+    React.render(<div><Header stuff={tabInfo} /></div>, document.body);
+    </script>
+  </body>
+</html>
